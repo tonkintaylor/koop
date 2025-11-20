@@ -27,7 +27,10 @@ class KoordinatesConnection:
             api_key = os.environ.get("KOORDINATES_API_KEY")
 
         if api_key is None:
-            msg = "Please set the KOORDINATES_API_KEY environment variable in the .env file."
+            msg = (
+                "Please set the KOORDINATES_API_KEY environment variable in the "
+                ".env file."
+            )
             raise ValueError(msg)
 
         self.domain = domain
