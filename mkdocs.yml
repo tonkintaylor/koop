@@ -1,0 +1,3 @@
+site_name: YOUR_PACKAGE_NAME
+nav:
+  - Home: index.md
