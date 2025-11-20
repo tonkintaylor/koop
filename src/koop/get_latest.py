@@ -69,7 +69,10 @@ def _get_cache_dir() -> Path:
     """Get the cache directory."""
     cache_dir = os.environ.get("KOOPCACHE_DIR")
     if cache_dir is None:
-        msg = "Please set the KOOPCACHE_DIR environment variable to your desired cache directory."
+        msg = (
+            "Please set the KOOPCACHE_DIR environment variable to your "
+            "desired cache directory."
+        )
         raise ValueError(msg)
 
     cache_dir = Path(cache_dir)

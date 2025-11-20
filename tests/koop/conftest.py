@@ -5,7 +5,7 @@ import pytest
 from koop.backend.conn import KoordinatesConnection
 
 
-@pytest.fixture()
+@pytest.fixture
 def cache_dir(tmp_path_factory):
     tmp_dir = tmp_path_factory.mktemp("koopcache")
     # Store the original value of the environment variable
@@ -35,7 +35,7 @@ def layer_id():
     return 119171
 
 
-@pytest.fixture()
+@pytest.fixture
 def metadata_xml(assets_dir) -> str:
     fn = assets_dir / "metadata.xml"
     with fn.open("r") as f:

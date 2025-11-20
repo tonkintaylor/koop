@@ -37,7 +37,7 @@ class LayerDetails(BaseModel):
             self.published_at,
         )
         hash_key = str(hash_key).encode("utf-8")
-        hash_digest = md5(hash_key).hexdigest()  # noqa: S324, md5 not used for security
+        hash_digest = md5(hash_key).hexdigest()
         return hash_digest
 
 
@@ -74,7 +74,9 @@ def get_layer_details(
         return LayerDetails(**response_dict, version_id=response_dict["version"]["id"])
 
 
-def get_layer_metadata(session: Session, domain: str, api_version: str, layer_id: int) -> str:
+def get_layer_metadata(
+    session: Session, domain: str, api_version: str, layer_id: int
+) -> str:
     """Get the metadata for a layer."""
 
     layer_details = get_layer_details(

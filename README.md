@@ -1,55 +1,37 @@
-# Python PyPI Package Template
+# Koop
 
-A minimal template for creating Python packages with a simple "Hello World" example.
+A package for interfacing with Koordinates.
 
-## Quick Start
+## Installation
 
-### 1. Use this template
-
-Click the "Use this template" button on GitHub to create your own repository:
-
-### 2. Install dependencies
+Install the package from PyPI:
 
 ```bash
-# Run the development setup script
-.\tasks\dev_sync.ps1
+pip install koop
 ```
 
-### 3. Customize the package
+## Configuration
 
-#### Rename the package
+The following environment variables are required:
 
-1. Rename directories:
-   ```bash
-   mv src/whitelabel src/YOUR_PACKAGE_NAME
-   mv tests/whitelabel tests/YOUR_PACKAGE_NAME
-   ```
+- `KOORDINATES_API_KEY`: Your Koordinates API key.
+- `KOOPCACHE_DIR`: Directory to store cached layers.
 
-2. Update `pyproject.toml`:
-   - Change `name = "whitelabel"` to `name = "YOUR_PACKAGE_NAME"`
-   - Update author information
-   - Update repository URLs
+## Usage
 
-3. Update import statements in your code from `whitelabel` to `YOUR_PACKAGE_NAME`
+### Get a Layer
 
+You can download and cache a layer using its ID:
 
-## Next Steps
+```python
+from koop import get_layer_from_id
 
-1. Replace the hello_world function with your own code
-2. Add your functions to `src/YOUR_PACKAGE_NAME/functions/`
-3. Write tests in `tests/YOUR_PACKAGE_NAME/`
-4. Update `pyproject.toml` with your package details
-
-## CI/CD Configuration
-
-### SonarQube Setup
-
-To enable SonarQube analysis in your CI/CD pipeline, set the following variables:
-
-- `SONAR_TOKEN`: Set as a **secret** in your CI/CD platform (authentication token for SonarQube)
-- `SONAR_PROJECT_KEY`: Set as an **environment variable** in your CI/CD pipeline (unique key for your project, e.g., `your-org_your-repo`)
-
-`SONAR_HOST_URL` is typically configured at the organization level.
+# Returns a Path object to the downloaded Geopackage
+layer_path = get_layer_from_id(
+    layer_id=123,
+    api_key="your-api-key"
+)
+```
 
 ## License
 

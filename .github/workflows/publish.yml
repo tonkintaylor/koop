@@ -1,0 +1,32 @@
+# File: .github/workflows/publish.yml
+name: Publish Python Package
+
+on:
+    release:
+        types: [created] # Triggers when a new GitHub Release is created
+
+jobs:
+    pypi-publish:
+        name: Upload release to PyPI
+        runs-on: ubuntu-latest
+
+        environment:
+            name: pypi # Use the environment name you configured in PyPI (Step 1)
+
+        permissions:
+            id-token: write # Mandatory for Trusted Publishing (OIDC)
+            contents: read # Needed to checkout the code
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
+
+            - name: Build package
+              run: uv build
+
+            - name: Publish package distributions to PyPI
+              # This action automatically uses the Trusted Publisher OIDC token
+              uses: pypa/gh-action-pypi-publish@release/v1
