@@ -12,7 +12,7 @@ requires = [
 ]
 
 [project]
-name = "whitelabel"
+name = "koop"
 description = "A minimal Python package template with a simple Hello World example."
 readme = "README.md"
 license = "MIT"
@@ -33,7 +33,11 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 dynamic = [ "urls", "version" ]
-dependencies = [  ]
+dependencies = [
+  "defusedxml>=0.7.1",
+  "pydantic>=2.0.0",
+  "requests>=2.0.0",
+]
 
 [dependency-groups]
 dev = [
@@ -74,7 +78,7 @@ source = "vcs"
 "Source Archive" = "https://github.com/tonkintaylor/YOUR_REPOSITORY/archive/{commit_hash}.zip"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/whitelabel/_version.py"
+version-file = "src/koop/_version.py"
 
 [tool.ruff]
 line-length = 88
@@ -229,5 +233,5 @@ output = "test-reports/coverage.xml"
 
 [tool.uv]
 default-groups = [ "dev", "test", "doc" ]
-required-version = "==0.8.3"              # sync with .pre-commit-config.yaml and release.yml
+required-version = ">=0.7.13"              # sync with .pre-commit-config.yaml and release.yml
 link-mode = "symlink"
