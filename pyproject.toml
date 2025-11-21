@@ -71,10 +71,10 @@ doc = [
 source = "vcs"
 
 [tool.hatch.metadata.hooks.vcs.urls]
-"Source Code" = "https://github.com/tonkintaylor/YOUR_REPOSITORY"
-"Bug Tracker" = "https://github.com/tonkintaylor/YOUR_REPOSITORY/issues"
-"Releases" = "https://github.com/tonkintaylor/YOUR_REPOSITORY/releases"
-"Source Archive" = "https://github.com/tonkintaylor/YOUR_REPOSITORY/archive/{commit_hash}.zip"
+"Source Code" = "https://github.com/tonkintaylor/koop"
+"Bug Tracker" = "https://github.com/tonkintaylor/koop/issues"
+"Releases" = "https://github.com/tonkintaylor/koop/releases"
+"Source Archive" = "https://github.com/tonkintaylor/koop/archive/{commit_hash}.zip"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/koop/_version.py"
