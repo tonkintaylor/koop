@@ -51,14 +51,14 @@ class DublinCoreMetadata(BaseModel):
     def as_xml(self) -> str:
         """Convert the metadata to an XML string."""
         xml = (
-            '<oai_dc:dc xmlns:dc="https://purl.org/dc/elements/1.1/" '
-            'xmlns:gco="https://www.isotc211.org/2005/gco" '
-            'xmlns:gmd="https://www.isotc211.org/2005/gmd" '
-            'xmlns:gts="https://www.isotc211.org/2005/gts" '
-            'xmlns:oai_dc="https://www.openarchives.org/OAI/2.0/oai_dc/" '
-            'xmlns:gml="https://www.opengis.net/gml" '
-            'xmlns:xlink="https://www.w3.org/1999/xlink" '
-            'xmlns="https://purl.org/dc/elements/1.1/">'
+            '<oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" '
+            'xmlns:gco="http://www.isotc211.org/2005/gco" '
+            'xmlns:gmd="http://www.isotc211.org/2005/gmd" '
+            'xmlns:gts="http://www.isotc211.org/2005/gts" '
+            'xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" '
+            'xmlns:gml="http://www.opengis.net/gml" '
+            'xmlns:xlink="http://www.w3.org/1999/xlink" '
+            'xmlns="http://purl.org/dc/elements/1.1/">'
         )
         for key, value in self.model_dump().items():
             if value:
@@ -75,7 +75,7 @@ class DublinCoreMetadata(BaseModel):
     @classmethod
     def from_raw_xml(cls, xml: str) -> "DublinCoreMetadata":
         """Create a DublinCoreMetadata object from raw XML."""
-        ns = {"dc": "https://purl.org/dc/elements/1.1/"}
+        ns = {"dc": "http://purl.org/dc/elements/1.1/"}
         root = fromstring(xml)
         metadata = {}
 
