@@ -20,9 +20,6 @@ license-files = [ "LICENSE" ]
 maintainers = [
   { name = "Data + Analytics", email = "Sub-DisciplineData+AnalyticsStaff@tonkintaylor.co.nz" },
 ]
-authors = [
-  { name = "Bilbo Baggins", email = "bbaggins@tonkintaylor.co.nz" },
-]
 requires-python = ">=3.10"
 
 classifiers = [

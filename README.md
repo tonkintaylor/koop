@@ -81,23 +81,23 @@ try:
     )
     print(f"Layer title: {metadata.title}")
     print(f"Published: {metadata.date}")
-    
+
     # Edit metadata fields
     metadata.edit_metadata_fields(
         description="Updated description",
         creator="Your Organization"
     )
-    
+
     # Update source field with specific layer versions
     metadata.update_source_field(
         conn=conn,
         layer_ids=[123, 456],
         version_ids=[1, 2]
     )
-    
+
     # Export metadata to XML
     metadata.to_xml(Path("metadata.xml"))
-    
+
 finally:
     conn.close()
 ```
@@ -198,10 +198,6 @@ conn.close()
 - `DublinCoreMetadata.update_source_with_latest_layer_versions(conn, layer_ids)`: Update source with latest versions
 - `DublinCoreMetadata.to_xml(path)`: Export metadata to XML file
 - `DublinCoreMetadata.as_xml()`: Get metadata as XML string
-
-## Contributing
-
-See the [CONTRIBUTING.md](https://github.com/tonkintaylor/koop/blob/main/CONTRIBUTING.md) file.
 
 ## License
 
