@@ -8,20 +8,23 @@
 [![PyPI Supported Versions](https://img.shields.io/pypi/pyversions/koop.svg)](https://pypi.python.org/pypi/koop)
 ![PyPI License](https://img.shields.io/pypi/l/koop.svg)
 
-A Python package for interfacing with the Koordinates API, enabling seamless download and caching of geospatial layers with metadata management.
+A Python client for the [Koordinates](https://koordinates.com/) platform API. Download geospatial layers (vector and raster), cache them locally, and manage Dublin Core metadata — all from a single function call.
 
 ## Overview
 
-`koop` provides a simple and efficient interface for working with Koordinates, a leading geospatial data management platform. Download layers, manage metadata, and integrate with your geospatial workflows.
+[Koordinates](https://koordinates.com/) is a geospatial data management platform used by organisations such as [LINZ](https://data.linz.govt.nz/) (Land Information New Zealand) to publish and share geospatial datasets. `koop` wraps the Koordinates REST API to let you:
+
+1. **Download layers by ID** — vector layers arrive as GeoPackage files, raster layers as GeoTIFF files.
+2. **Cache downloads** — each file is stored under a content-addressed name (`{layer_id}_{version_id}_{hash}.gpkg`), so repeated requests for the same version are served from disk.
+3. **Manage metadata** — fetch, edit, and export Dublin Core (ISO 19115) metadata as XML.
 
 ### Features
 
-- 📥 **Automatic layer downloading**: Download and cache layers from Koordinates using layer IDs.
-- 🗄️ **Smart caching**: Automatically cache downloaded layers to avoid redundant downloads.
-- 📋 **Metadata management**: Extract, edit, and manage Dublin Core compliant metadata.
-- 🔐 **API authentication**: Secure connection management with API key authentication.
-- 🌐 **Multi-domain support**: Connect to different Koordinates domains (e.g., LINZ, custom instances).
-- 🗂️ **GeoPackage export**: All layers are exported as GeoPackage files for easy integration.
+- **Layer downloading** — download vector or raster layers from any Koordinates domain using a layer ID. The export is created server-side and streamed to your machine.
+- **Version-aware caching** — downloaded layers are cached in a local directory (`KOOPCACHE_DIR`). The cache key includes the layer version and a hash of the layer details, so updated layers are re-downloaded automatically.
+- **Dublin Core metadata** — fetch metadata from Koordinates, edit fields programmatically, track source layers with version history, and export to OAI_DC XML.
+- **Multi-domain support** — connect to any Koordinates instance (e.g., `data.linz.govt.nz`, `ttgroup.koordinates.com`, or your own).
+- **API key authentication** — connections authenticate via an `Authorization: key <api_key>` header. The key can be passed explicitly or read from the `KOORDINATES_API_KEY` environment variable.
 
 ## Installation
 
@@ -179,25 +182,55 @@ custom_conn = KoordinatesConnection(
 conn.close()
 ```
 
+## How It Works
+
+When you call `get_layer_from_id`, the following happens:
+
+1. A `KoordinatesConnection` is opened to the target domain.
+2. Layer details (title, type, version, etc.) are fetched from the `/layers/{id}/` API endpoint.
+3. The cache directory is checked for an existing file matching the layer version and content hash.
+4. If no cache hit, an export job is created on the Koordinates server, polled until complete, and the resulting ZIP is downloaded and extracted.
+5. The extracted GeoPackage (or GeoTIFF) is renamed to the cache key and stored for future use.
+6. The path to the local file is returned.
+
 ## API Reference
 
-### Main Functions
+### `get_layer_from_id(layer_id, api_key, domain)`
 
-- `get_layer_from_id(layer_id, api_key, domain="ttgroup.koordinates.com")`: Download and cache a layer by ID
+Top-level convenience function. Downloads and caches a layer, returning a `Path` to the local file.
 
-### Connection
+| Parameter    | Default                       | Description                                  |
+| ------------ | ----------------------------- | -------------------------------------------- |
+| `layer_id`   | *required*                    | Integer layer ID on the Koordinates platform |
+| `api_key`    | *required*                    | Koordinates API key                          |
+| `domain`     | `"ttgroup.koordinates.com"`   | Koordinates instance hostname                |
 
-- `KoordinatesConnection(api_key, domain, api_version)`: Create an authenticated connection to Koordinates API
+### `KoordinatesConnection`
 
-### Metadata
+Manages an authenticated `requests.Session` against a Koordinates instance.
 
-- `DublinCoreMetadata.from_koordinates(conn, layer_id)`: Fetch metadata from Koordinates
-- `DublinCoreMetadata.populate_template(conn, layer_id)`: Create metadata template from layer details
-- `DublinCoreMetadata.edit_metadata_fields(**kwargs)`: Update metadata fields
-- `DublinCoreMetadata.update_source_field(conn, layer_ids, version_ids)`: Update source field with specific versions
-- `DublinCoreMetadata.update_source_with_latest_layer_versions(conn, layer_ids)`: Update source with latest versions
-- `DublinCoreMetadata.to_xml(path)`: Export metadata to XML file
-- `DublinCoreMetadata.as_xml()`: Get metadata as XML string
+| Parameter     | Default                       | Description                    |
+| ------------- | ----------------------------- | ------------------------------ |
+| `api_key`     | `KOORDINATES_API_KEY` env var | API key for authentication     |
+| `domain`      | `"ttgroup.koordinates.com"`   | Target Koordinates hostname    |
+| `api_version` | `"1.x"`                       | API version string             |
+
+Call `conn.close()` when finished to release the underlying session.
+
+### `DublinCoreMetadata`
+
+Pydantic model representing the 15 Dublin Core metadata elements (title, creator, subject, description, publisher, contributor, date, type, format, identifier, source, language, relation, coverage, rights).
+
+| Method                                                       | Description                                                     |
+| ------------------------------------------------------------ | --------------------------------------------------------------- |
+| `from_koordinates(conn, layer_id)`                           | Fetch metadata from the Koordinates API                         |
+| `populate_template(conn, layer_id)`                          | Create a metadata template pre-filled from layer details        |
+| `edit_metadata_fields(**kwargs)`                             | Update one or more metadata fields                              |
+| `update_source_field(conn, layer_ids, version_ids)`          | Set the source field to specific layer/version pairs            |
+| `update_source_with_latest_layer_versions(conn, layer_ids)`  | Set the source field using the latest version of each layer     |
+| `as_xml()`                                                   | Return metadata as an OAI_DC XML string                         |
+| `to_xml(path)`                                               | Write metadata to an XML file                                   |
+| `from_raw_xml(xml)`                                          | Parse an OAI_DC XML string into a `DublinCoreMetadata` instance |
 
 ## License
 
