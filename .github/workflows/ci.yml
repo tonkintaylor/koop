@@ -109,7 +109,7 @@ jobs:
       - name: Create SonarQube properties
         run: |
           cat > sonar-project.properties << EOF
-          sonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+          sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
           sonar.language=py
           sonar.python.version=3.13
           sonar.sources=./src
@@ -123,5 +123,5 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@884b79409bbd464b2a59edc326a4b77dc56b2195 # v3.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           KOORDINATES_API_KEY: ${{ secrets.KOORDINATES_API_KEY }}
